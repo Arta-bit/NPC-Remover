@@ -1,20 +1,19 @@
 # NPC-Remover
-NPC-Remover
 
-A simple script to remove all NPCs from your Fayoum RP server, ensuring only real players remain for a more immersive experience. Perfect for creating NPC-free environments in RP servers.
+This script is perfect for Roleplay (RP) servers. It removes all NPCs, ensuring only real players remain for a more immersive experience.
 
-Features:
+How to Set Up:
 
-Removes all NPCs from the server.
+1 : Create a folder named nps in your resources directory.
 
-Ensures only real players remain.
+2 : Place the following files inside the folder:   || fxmanifest.lua  ||  client.lua  ||  server.lua
 
-Perfect for RP servers that require a more authentic environment without NPCs.
 
-Setup Instructions:
 
-Create a folder named nps in your resources directory.
+3 : In your server.cfg, add the line:   ensure nps
 
-Place the script inside the nps folder.
 
-In your server.cfg, add the following line:
+4 : Restart your server.
+
+By using this script, all NPCs will be removed from the server, providing a cleaner and more authentic RP environment.
+We hope you enjoy it!
