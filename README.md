@@ -6,7 +6,7 @@ How to Set Up:
 
 1 : Create a folder named nps in your resources directory.
 
-2 : Place the following files inside the folder:   || fxmanifest.lua  ||  client.lua  ||  server.lua
+2 : Place the following files inside the folder:   || fxmanifest.lua  ||  client.lua  ||
 
 
 
