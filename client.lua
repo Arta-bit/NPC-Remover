@@ -1,46 +1,64 @@
 Citizen.CreateThread(function()
+    local DM = 0.0
     while true do
-        Citizen.Wait(0)
-
-        SetPedDensityMultiplierThisFrame(0.0)
-        SetVehicleDensityMultiplierThisFrame(0.0)
-        SetRandomVehicleDensityMultiplierThisFrame(0.0)
-        SetParkedVehicleDensityMultiplierThisFrame(0.0)
-        SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0)
-
+        SetGarbageTrucks(false)
+        SetRandomBoats(false)
         SetCreateRandomCops(false)
         SetCreateRandomCopsNotOnScenarios(false)
         SetCreateRandomCopsOnScenarios(false)
-        SetRandomBoats(false)
-        SetGarbageTrucks(false)
 
-        MuteAmbientSound(true)
-        MuteVehicleAudio(true)
-        DistantCopCarSirens(false)
-        SetVehicleRadioEnabled(PlayerPedId(), false)
-        SetUserRadioControlEnabled(false)
-        SetFrontendRadioActive(false)
-        StopAudioScene("CHARACTER_CHANGE_IN_SKY_SCENE")
-        StopAudioScene("MP_LEADERBOARD_SCENE")
-        StopAudioScene("DLC_MPHEIST\\HEIST_HACKING_SNAKE")
+        SetVehicleDensityMultiplierThisFrame(DM)
+        SetPedDensityMultiplierThisFrame(DM)
+        SetRandomVehicleDensityMultiplierThisFrame(DM)
+        SetParkedVehicleDensityMultiplierThisFrame(DM)
+        SetScenarioPedDensityMultiplierThisFrame(DM, DM)
 
-        local peds = GetGamePool('CPed')
-        for _, ped in ipairs(peds) do
-            if not IsPedAPlayer(ped) and DoesEntityExist(ped) and not IsEntityDead(ped) then
-                ClearPedTasksImmediately(ped)
-                SetEntityAsMissionEntity(ped, true, true)
-                DeletePed(ped)
-            end
-        end
+        local x,y,z = table.unpack(GetEntityCoords(PlayerPedId()))
+        ClearAreaOfVehicles(x, y, z, 100, false , false , false , false , false )
+        RemoveVehiclesFromGeneratorsInArea(x - 500.0, y - 500.0, z - 500.0 , x + 500.0, y + 500.0, z + 500.0 )
 
-        local vehicles = GetGamePool('CVehicle')
-        for _, vehicle in ipairs(vehicles) do
-            if DoesEntityExist(vehicle) and not IsPedAPlayer(GetPedInVehicleSeat(vehicle, -1)) then
-                SetVehicleEngineOn(vehicle, false, true, true)
-                SetVehicleSiren(vehicle, false)
-                SetEntityAsMissionEntity(vehicle, true, true)
-                DeleteVehicle(vehicle)
-            end
-        end
+        Citizen.Wait(0)
     end
 end)
+
+Citizen.CreateThread(function()
+    while true do
+        local a = PlayerPedId()
+        local b = GetVehiclePedIsIn(a, false)
+
+        SetUserRadioControlEnabled(false)
+        SetFrontendRadioActive(false)
+        if b ~= 0 then
+            SetVehRadioStation(b, "OFF")
+        end
+
+        DistantCopCarSirens(false)
+        CancelCurrentPoliceReport()
+        StopAllAlarms(true)
+        StopAudioScenes()
+
+        SetAudioFlag("DisableFlightMusic", true)
+        SetAudioFlag("WantedMusicDisabled", true)
+        SetAudioFlag("PoliceScannerDisabled", true)
+
+        for _, ped in ipairs(GetGamePool('CPed')) do
+            if ped ~= a then
+                DisablePedPainAudio(ped, true)
+                StopPedSpeaking(ped, true)
+            end
+        end
+
+        Citizen.Wait(10)
+    end
+end)
+
+function StopAudioScenes()
+    local scenes = {
+        "CHARACTER_CHANGE_IN_SKY_SCENE",
+        "FBI_HEIST_H5_MUTE_AMBIENCE_SCENE",
+        "DLC_MPHEIST/HEIST_FLEE_SCENE"
+    }
+    for _, scene in ipairs(scenes) do
+        StopAudioScene(scene)
+    end
+end
