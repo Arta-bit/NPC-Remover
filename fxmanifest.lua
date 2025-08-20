@@ -11,8 +11,3 @@ client_scripts {
 
     'client.lua'
 }
-
-server_scripts {
-    '@es_extended/locale.lua',
-    'server.lua'
-}
